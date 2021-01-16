@@ -8,9 +8,6 @@ const longitudeDelta = 1
 
 export default class MapScreen extends React.Component {
 
-    STORAGE_KEY = '@storage_Key'
-
-
     constructor(props) {
         super(props);
         this.state={
@@ -81,13 +78,13 @@ export default class MapScreen extends React.Component {
                     description="this is a marker example"
                 />
             </MapView>
-            <View pointerEvents="none" style={{position: 'absolute', top: 0, bottom: 45, left: 20, right: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent'}}>
+            <View pointerEvents="none" style={styles.pointer}>
                 <Image pointerEvents="none" style={{width: 50,
                     height: 50,}}source={require('../assets/marker.png')}
                 />
             </View>
             <Pressable
-                onPress={onPress}   
+                //onPress={onPress}   
                 style={({pressed}) => [{
                     opacity: pressed ? 0.5 : 1,
                 },
@@ -122,5 +119,15 @@ export default class MapScreen extends React.Component {
         bottom: 20,
         right:10,
       },
+      pointer: {
+        position: 'absolute', 
+        top: 0, 
+        bottom: 45, 
+        left: 20, 
+        right: 0, 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        backgroundColor: 'transparent'
+      }
       
   });
