@@ -8,16 +8,17 @@ const Header = ({ title }) => (
 );
 const styles = StyleSheet.create({
   headerContainer: {
+    height: '10%',
     marginTop: 40,
+    // borderColor: 'white',
+    // borderWidth: 2
   },
   headerText: {
     textAlign: 'center',
-    height: '50%',
-    color: 'black',
+    height: '100%',
+    color: 'white',
     fontSize: 48,
-    fontWeight: '500',
-    borderWidth: 2,
-    borderRadius: 5,
+    fontWeight: 'bold',
   }
 });
 export default Header;

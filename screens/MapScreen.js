@@ -8,6 +8,8 @@ const longitudeDelta = 1
 
 export default class MapScreen extends React.Component {
 
+    STORAGE_KEY = '@storage_Key'
+
 
     constructor(props) {
         super(props);
@@ -44,6 +46,19 @@ export default class MapScreen extends React.Component {
           region
         })
       }
+
+      
+      storeData = async (value) => {
+        try {
+          const jsonValue = JSON.stringify(value)
+          await AsyncStorage.setItem(STORAGE_KEY+state_z, jsonValue)
+          alert('Saved successfully!')
+        } catch (e) {
+          alert('Failed to save data in storage')
+        }
+      }
+
+      onPressAdd = {}
     
 
     render() {
@@ -54,42 +69,38 @@ export default class MapScreen extends React.Component {
         return (
           <View style={{flex: 1}}>
             <MapView style={styles.map}
-            ref='map'
-            initialRegion={this.state.region}
-            showsUserLocation={true}
-            showsMyLocationButton={true}
-            onMapReady={this.onMapReady}
-            //onRegionChangeComplete={this.onRegionChange}
-            onRegionChange={this.onRegionChange}
-            >
-            <Marker
-             coordinate={{ latitude: this.state.region.latitude, 
-             longitude: this.state.region.longitude 
-            //     latitude: this.state.latitude,
-            //     longitude: this.state.longitude,
-              }}
-             title="this is a marker"
-             description="this is a marker example"
-           />
-           </MapView>
+                ref='map'
+                initialRegion={this.state.region}
+                showsUserLocation={true}
+                showsMyLocationButton={true}
+                onMapReady={this.onMapReady}
+                //onRegionChangeComplete={this.onRegionChange}
+                onRegionChange={this.onRegionChange}>
+                <Marker
+                    coordinate={{ 
+                        latitude: this.state.region.latitude, 
+                       longitude: this.state.region.longitude 
+                    }}
+                    title="this is a marker"
+                    description="this is a marker example"
+                />
+            </MapView>
             <View pointerEvents="none" style={{position: 'absolute', top: 0, bottom: 45, left: 20, right: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent'}}>
                 <Image pointerEvents="none" style={{width: 50,
                     height: 50,}}source={require('../assets/marker.png')}
                 />
             </View>
-           <Pressable
-          onPress={this.onPressFab}   
-            style={({pressed}) => [
-                {
+            <Pressable
+                onPress={this.onPressAdd}   
+                style={({pressed}) => [{
                     opacity: pressed ? 0.5 : 1,
                 },
-              styles.absolutePlus
-            ]}
+                styles.absolutePlus]}
         >
-          <Image
-            source={require('../assets/plus.png')}
-            style={styles.floatingButtonStyle}
-          />
+            <Image
+                source={require('../assets/plus.png')}
+                style={styles.floatingButtonStyle}
+            />
         </Pressable>
           </View>
         )
@@ -115,10 +126,5 @@ export default class MapScreen extends React.Component {
         bottom: 20,
         right:10,
       },
-      markerContainer: {
-        bottom: deviceHeight/2.2,
-        position: 'absolute',
-        left: 0,
-        right: 0,
-    },
+      
   });
