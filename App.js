@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Hello World from group 07: Artjoms Pralics! This is my Artjoms Pralics first React Native application!</Text>
+      <Text>This is tasky! Application for task management for you and your friends!</Text>
       <StatusBar style="auto" />
     </View>
   );
