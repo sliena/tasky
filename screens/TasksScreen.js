@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddFlat from '../Components/AddFlat'
 import Header from '../Components/Header'
 import Item from '../Components/Item'
+import Zitem from '../Components/Zitem'
 
 
 
@@ -32,6 +33,19 @@ import Item from '../Components/Item'
 
 
 class TasksScreen extends React.Component {
+
+  constructor(props) {
+    super(props)
+    
+
+    this.handler = this.handler.bind(this)
+  }
+
+  handler() {
+    this.setState({
+      someVar: 'some value'
+    })
+  }
 
   popupRef = React.createRef()
 
@@ -65,9 +79,14 @@ class TasksScreen extends React.Component {
 		}
   }
   
-  addTodo = newTask => {
-		const newTodoItem = newTask
+  saveTodos = newToDos => {
+		const saveTodos = AsyncStorage.setItem('todos', JSON.stringify(newToDos))
+	}
 
+
+
+  addTodo = newTask => {
+		const newTodoItem = newTask 
 		if (newTodoItem !== '') {
 			this.setState(prevState => {
 				const ID = 4
@@ -89,41 +108,6 @@ class TasksScreen extends React.Component {
 				this.saveTodos(newState.todos)
 				return { ...newState }
 			})
-		}
-  }
-  
-  saveTodos = newToDos => {
-		const saveTodos = AsyncStorage.setItem('todos', JSON.stringify(newToDos))
-	}
-
-  retrieveData = async () => {
-    try {
-      const name = await AsyncStorage.getItem('todos')
-
-      if (name !== null) {
-        this.setState({ name })
-      }
-    } catch (e) {
-      alert('Failed to load name.')
-    }
-  }
-
-  save = async name => {
-    try {
-      await AsyncStorage.setItem('todos', name)
-      alert('Data successfully saved!')
-      this.setState({ name })
-    } catch (e) {
-      alert('Failed to save name.')
-    }
-  }
-
-  removeEverything = async () => {
-    try {
-      await AsyncStorage.clear()
-      alert('Storage successfully cleared!')
-    } catch (e) {
-      alert('Failed to clear the async storage.')
     }
   }
 
@@ -133,6 +117,7 @@ class TasksScreen extends React.Component {
 		})
   }
   
+  
 
   render() {
     const headerTitle='Tasky';
@@ -140,7 +125,7 @@ class TasksScreen extends React.Component {
     
     return (
       <View styles={styles.container}>
-        <Header title={headerTitle} />
+        <Header title={headerTitle} styles={{backgroundColor: 'red'}}/>
         <FlatList 
               onPress={() => console.log("clicked")}
               keyExtractor = {item => item.id}  
@@ -148,6 +133,8 @@ class TasksScreen extends React.Component {
               renderItem={row => {
                 return (
                   <Item
+                    handler = {this.handler}
+                    navigation={this.props.navigation}
                     isCompleted={row.item.isCompleted}
                     textValue={row.item.textValue}
                     id={row.item.id}
@@ -158,9 +145,9 @@ class TasksScreen extends React.Component {
                 )
               }}
         />
-        <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+        {/* <Button title="Go to Home" onPress={() => this.props.navigation.navigate('Home')} /> */}
         {/* <Button title="Reset" onPress={reset} /> */}
-        <Button title="Save" onPress={() => storeData(state_z.toString())} />
+        {/* <Button title="Save" onPress={() => storeData(state_z.toString())} /> */}
         {/* <Button title="Read" onPress={readData} /> */}
         {/* <Button title="Clear" onPress={clearStorage} />   */}
         
@@ -180,6 +167,37 @@ class TasksScreen extends React.Component {
         </Pressable>
       </View>
     );
+  }
+}
+
+retrieveData = async () => {
+  try {
+    const name = await AsyncStorage.getItem('todos')
+
+    if (name !== null) {
+      this.setState({ name })
+    }
+  } catch (e) {
+    alert('Failed to load name.')
+  }
+}
+
+save = async name => {
+  try {
+    await AsyncStorage.setItem('todos', name)
+    alert('Data successfully saved!')
+    this.setState({ name })
+  } catch (e) {
+    alert('Failed to save name.')
+  }
+}
+
+removeEverything = async () => {
+  try {
+    await AsyncStorage.clear()
+    alert('Storage successfully cleared!')
+  } catch (e) {
+    alert('Failed to clear the async storage.')
   }
 }
 export default TasksScreen;
@@ -294,7 +312,7 @@ const styles = StyleSheet.create({
   },
   absolutePlus: {
     position: 'absolute',
-    top:475,
+    top:550,
     right:10,
   }
 });

@@ -4,7 +4,7 @@ import { Button, View, Text, Image, StyleSheet, Pressable, LinearGradient } from
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { set } from 'react-native-reanimated';
 
-
+// modal bottom pupup window
 export class NewItemModal extends React.Component {
     constructor(props){
         super(props)
