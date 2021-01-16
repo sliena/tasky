@@ -19,8 +19,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" component={TasksScreen} options={{ title: 'My home' }}/>
-        <Drawer.Screen name="Locations" component={MapScreen} />
+        <Drawer.Screen name="Home" component={TasksScreen} options={{ title: 'Task Screen' }}/>
+        <Drawer.Screen name="Locations" component={MapScreen} options={{ title: 'My Locations' }}/>
       </Drawer.Navigator>
 
     </NavigationContainer>
