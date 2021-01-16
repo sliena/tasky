@@ -1,60 +1,52 @@
 import React, { useState } from 'react';
-import { Button, View, Text, Image, StyleSheet, Pressable, LinearGradient, SafeAreaView, TouchableOpacity, Modal, TouchableHighlight } from 'react-native';
+import { Dimensions, TextInput, View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Modal } from 'react-native';
 import uuidv1 from 'uuid/v1'
 import { FlatList } from 'react-native-gesture-handler';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import AddFlat from '../Components/AddFlat'
 import Header from '../Components/Header'
-import Item from '../Components/Item'
-import Zitem from '../Components/Zitem'
-import Todo from '../Components/Todo'
-import AddModal from '../Components/AddModal'
 
-const data = ["Germany", "Australia", "Sri Lanka", "Japan"];
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const uuidV1 = require('uuid/v1');
 
 class TasksScreen extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-        data: [],
-        refreshing: true,
-        todata: [{
-              "height": 333,
-              "id": "44j",
-              "url": "https://cdn2.thecatapi.com/images/44j.jpg",
-              "width": 500,
-            }],
-        modalVisible: false
+        data: [{
+          "id": uuidV1(),
+          "title": 'Groceries',
+          "description": 'Buy milk, potatoes, bananas'
+        },
+        {
+          "id": uuidV1(),
+          "title": 'Take kids from kindergarten',
+          "description": 'Should be picked up no later than 18:00'
+        },
+        {
+          "id": uuidV1(),
+          "title": 'Visit doctor',
+          "description": 'Doctors appointment to check eye'
+        },
+        ],
+        modalVisible: false,
+        inputTitleValue: '',
+        inputDescriptionValue: '',
     }
 }
 
 componentDidMount() {
-  console.log('CATS START ZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUG')
-    this.fetchCats();
-    console.log('TODO START ZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUG')
     //this.retrieveData();
-}
-
-fetchCats() {
-    this.setState({ refreshing: true });
-    fetch('https://api.thecatapi.com/v1/images/search?limit=10&page=1')
-        .then(res => res.json())
-        .then(resJson => {
-          console.log(resJson);
-            this.setState({ data: resJson });
-            this.setState({ refreshing: false });
-        }).catch(e => console.log(e));
 }
 
 retrieveData = async () => {
   try {
     const name = await AsyncStorage.getItem(todos)
-    console.log('FROM INSIDE RETRIEVEDATA ZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUGZUG')
     console.log(todos)
-
     if (name !== null) {
       this.setState({ todata: todos })
     }
@@ -64,108 +56,158 @@ retrieveData = async () => {
 }
 
 renderItemComponent = (data) =>
-    <TouchableOpacity style={styles.container}
-    >
-        <Text>{data.item.url}</Text>
+    <TouchableOpacity style={styles.todoItem}
+    onPress={() => {
+      alert('Work in progress...')
+    }}>
+      <Text style={styles.textInput}>{data.item.title}</Text>
+      <Text>{data.item.description}</Text>
     </TouchableOpacity>
-    
-
-ItemSeparator = () => <View style={{
-    height: 2,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    marginLeft: 10,
-    marginRight: 10,
-}}
-/>
 
 setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-  }
+  this.setState({modalVisible: visible});
+}
 
-  onPressFab = () => {
-    // var newArray = [...this.state.todata , {"height": 333,"id": "44j","url": "https://cdn2.thecatapi.com/images/44j.jpg","width": 500,}]
-    // this.setState({ todata: newArray 
-  // })
-    alert('baboon')
+setInputTitleValue(title) {
+  this.setState({inputTitleValue: title})
+}
+setInputDescriptionValue(description) {
+  this.setState({inputDescriptionValue: description})
+}
+  
+saveTask = (title, description) => {
+  if (this.state.inputTitleValue != '' 
+      && this.state.inputDescriptionValue != '') {
+    var newArray = [...this.state.data , {"id": uuidV1(), "title": title, "description": description}]
+    console.log('CHECKPOINT saveTask')
+    this.setState({ data: newArray })
+  } else {
+    this.setModalVisible(!this.state.modalVisible)
   }
-
-// handleRefresh = () => {
-//     this.setState({ refreshing: false }, () => { this.fetchCats() }); // call fetchCats after setting the state
-// }
+  
+}
 
 render() {
   return (
     <SafeAreaView style={{backgroundColor: 'purple', height: '100%', justifyContent: 'center',
-    alignItems: 'center'}}>
+    alignItems: 'center', marginTop: 20}}>
       
       <Header title={'Tasky'} />
       <FlatList
-        data={this.state.todata}
+        data={this.state.data}
         renderItem={item => this.renderItemComponent(item)}
         keyExtractor={item => item.id.toString()}
-        ItemSeparatorComponent={this.ItemSeparator}
         refreshing={this.state.refreshing}
         onRefresh={this.handleRefresh}
       />
-      <TouchableOpacity onPress = {() => {this.setModalVisible(true)}} style={{width: '80%'}}>
+      <TouchableOpacity onPress = {() => {
+          this.setModalVisible(true)
+          this.setState({ inputTitleValue: '' })
+          this.setState({ inputDescriptionValue: '' })
+        }} 
+        style={{marginTop: 20, width: '80%'}}>
         <View style = {styles.newItemButton}>
           <Text style = {{color: 'white'}}>New Task</Text>
         </View>
       </TouchableOpacity>
-      <View style={{marginTop: 22}}>
+      <View>
         <Modal
           animationType="slide"
-          transparent={false}
+          transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            alert('Modal has been closed.');
-          }}>
-          <View style={{marginTop: 22}}>
+            this.setModalVisible(!this.state.modalVisible);
+          }}>     
+          <View style={styles.modalWindow}>
+            <TouchableOpacity onPress = {() => {
+                this.saveTask(this.state.inputTitleValue, this.state.inputDescriptionValue)
+                this.setModalVisible(!this.state.modalVisible);
+              }}>
+              <View style = {styles.saveAndCloseButton}>
+                <Text style = {{color: 'white'}}>Save & Close</Text>
+              </View>
+            </TouchableOpacity>
             <View>
-              <Text>Hello World!</Text>
-
-              <TouchableHighlight
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text>Hide Modal</Text>
-              </TouchableHighlight>
-            </View>
+            <TextInput placeholder="Enter title..." 
+              value={this.inputValue} style={styles.textInputBox}  
+              onChangeText={(value) => this.setInputTitleValue(value)} 
+            />
           </View>
+          <View>
+            <TextInput placeholder="Enter description..." 
+              value={this.inputValue} style={styles.textInputBox}  
+              onChangeText={(value) => this.setInputDescriptionValue(value)} 
+            />
+          </View>
+          </View>
+          
         </Modal>
       </View>
     </SafeAreaView>
-
     )
-}
+  }  
 }
 
 const styles = StyleSheet.create({
-container: {
-height: 100,
-margin: 10,
-backgroundColor: '#FFF',
-borderRadius: 6,
-},
-image: {
-height: '100%',
-borderRadius: 4,
-},
+todoItem: {
+  marginVertical: 5,
+  height: 50,
+  width: windowWidth,
+  backgroundColor: '#FFF',
+  fontWeight: 'bold'
+  },
 newItemButton: {
-  backgroundColor: '#24A0ED', 
+  backgroundColor: '#03A9F4', 
   alignItems: 'center', 
   justifyContent: 'center', 
   borderRadius: 5,
   width: '100%', 
   height: 40,
-
+  marginBottom: 45
+},
+saveAndCloseButton: {
+  backgroundColor: '#03A9F4', 
+  alignItems: 'center', 
+  justifyContent: 'center', 
+  borderRadius: 5,
+  width: '100%', 
+  height: 40,
+  marginBottom: 25
+},
+modalWindow: {
+  backgroundColor: 'white', 
+  marginTop: 22, 
+  width: '90%', 
+  height: '85%', 
+  alignSelf: 'center', 
+  top:80, 
+  borderRadius: 5,
+  borderWidth: 1, 
+  borderColor: 'black'
+},
+textInputBox: {
+  borderWidth: 1,
+  borderColor: 'black',
+  marginVertical: 5,
+},
+textInput: {
+  fontWeight: 'bold'
 }
 });
 
 export default TasksScreen;
 
 
-
+// fetchCats() {
+//   this.setState({ refreshing: true });
+//   fetch('https://api.thecatapi.com/v1/images/search?limit=10&page=1')
+//       .then(res => res.json())
+//       .then(resJson => {
+//         console.log(resJson);
+//           this.setState({ data: resJson });
+//           this.setState({ refreshing: false });
+//       }).catch(e => console.log(e));
+// }
 // retrieveData = async () => {
 //   try {
 //     const name = await AsyncStorage.getItem('todos')
@@ -272,43 +314,3 @@ export default TasksScreen;
 //   //     console.error(error)
 //   //   }
 //   // }
-
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: 'white',
-//     padding: 10,
-//   },
-//   titleStyle: {
-//     fontSize: 28,
-//     fontWeight: 'bold',
-//     textAlign: 'center',
-//     padding: 10,
-//   },
-//   textStyle: {
-//     fontSize: 16,
-//     textAlign: 'center',
-//     padding: 10,
-//   },
-//   plus: {
-//     position: 'absolute',
-//     width: 50,
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     left: 110,
-//     bottom: 20,
-//   },
-//   floatingButtonStyle: {
-//     resizeMode: 'contain',
-//     width: 70,
-//     height: 70,
-//     //backgroundColor:'black'
-//   },
-//   absolutePlus: {
-//     position: 'absolute',
-//     top:550,
-//     right:10,
-//   }
-// });

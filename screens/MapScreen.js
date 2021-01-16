@@ -46,7 +46,6 @@ export default class MapScreen extends React.Component {
           region
         })
       }
-
       
       storeData = async (value) => {
         try {
@@ -56,10 +55,7 @@ export default class MapScreen extends React.Component {
         } catch (e) {
           alert('Failed to save data in storage')
         }
-      }
-
-      onPressAdd = {}
-    
+      }   
 
     render() {
         // const [location, setLocation] = useState({
@@ -91,7 +87,7 @@ export default class MapScreen extends React.Component {
                 />
             </View>
             <Pressable
-                onPress={this.onPressAdd}   
+                onPress={onPress}   
                 style={({pressed}) => [{
                     opacity: pressed ? 0.5 : 1,
                 },

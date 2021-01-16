@@ -1,12 +1,9 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import HomeScreen from './screens/HomeScreen';
 import TasksScreen from './screens/TasksScreen';
-import AddTaskScreen from './screens/AddTaskScreen';
 import MapScreen from './screens/MapScreen';
 
 
