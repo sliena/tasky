@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Tasky - share tasks between your friends, family or colleagues!</Text>
+      <Text>Hello World from Sigmunds!</Text>
       <StatusBar style="auto" />
     </View>
   );
